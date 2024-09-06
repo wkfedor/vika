@@ -7,6 +7,8 @@ class CreateTelegramInMessages < ActiveRecord::Migration[5.2]
       t.references :telegram_in_group, null: false, foreign_key: true, comment: "Ссылка на группу"
       t.datetime :created_at, null: false, comment: "Дата создания сообщения"
       t.datetime :updated_at, null: false, comment: "Дата последнего изменения сообщения"
+      t.integer :views_count, default: 0, null: false, comment: "Количество просмотров"
+      t.datetime :views_updated_at, comment: "Время последнего обновления количества просмотров"
 
       t.timestamps
     end
