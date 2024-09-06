@@ -1,4 +1,4 @@
-# db/migrate/20240906070601_create_telegram_in_messages.rb
+# db/migrate/20240906070602_create_telegram_in_messages.rb
 class CreateTelegramInMessages < ActiveRecord::Migration[5.2]
   def up
     create_table :telegram_in_messages, comment: "Таблица для хранения сообщений" do |t|

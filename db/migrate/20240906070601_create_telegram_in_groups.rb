@@ -1,4 +1,4 @@
-# db/migrate/20240906070602_create_telegram_in_groups.rb
+# db/migrate/20240906070601_create_telegram_in_groups.rb
 class CreateTelegramInGroups < ActiveRecord::Migration[5.2]
   def up
     create_table :telegram_in_groups, comment: "Таблица для хранения групп" do |t|
