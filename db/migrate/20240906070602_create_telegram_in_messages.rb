@@ -13,7 +13,7 @@ class CreateTelegramInMessages < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :telegram_in_messages, [:message_number, :telegram_in_group_id], unique: true, name: "index_telegram_in_messages_on_message_number_and_group_id"
+    add_index :telegram_in_messages, [:telegram_in_group_id, :message_number], unique: true, name: "index_messages_on_group_id_and_number"
   end
 
   def down

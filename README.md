@@ -9,3 +9,5 @@ CREATE DATABASE vika_test;
 rails db:migrate VERSION=20230410123456
 откатить только 1
 rails db:migrate:down VERSION=20230410123456
+выполнить миграции
+bin/rails db:migrate RAILS_ENV=development
