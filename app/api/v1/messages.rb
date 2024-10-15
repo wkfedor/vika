@@ -49,6 +49,9 @@ module API
               )
             end
 
+            # Запуск интерактора StartWork после успешного сохранения сообщения
+            StartWork.run!(message_id: message.id)
+
             status 200
             { status: 'success' }
           else
