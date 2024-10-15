@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.2'
+gem "active_interaction", "~> 4"
 gem 'grape', '~> 1.7.0'
 gem 'grape-swagger'
 gem 'grape-swagger-ui'
