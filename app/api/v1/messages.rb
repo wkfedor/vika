@@ -31,7 +31,8 @@ module API
             html_content: params[:html_content],
             message_number: params[:message_number],
             views_count: params[:views_count] || 0,
-            views_updated_at: params[:views_updated_at]
+            views_updated_at: params[:views_updated_at],
+            original: true
           )
 
           if message.save

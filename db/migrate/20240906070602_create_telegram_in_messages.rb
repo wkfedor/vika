@@ -9,6 +9,7 @@ class CreateTelegramInMessages < ActiveRecord::Migration[5.2]
       t.datetime :updated_at, null: false, comment: "Дата последнего изменения сообщения"
       t.integer :views_count, default: 0, null: false, comment: "Количество просмотров"
       t.datetime :views_updated_at, comment: "Время последнего обновления количества просмотров"
+      t.boolean :original, null: false, default: true, comment: "Оригинальное сообщение или сообщение для переделки"
 
       t.timestamps
     end
