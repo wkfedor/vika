@@ -8,10 +8,10 @@ class StartWork < ActiveInteraction::Base
     puts "Settings: #{settings.inspect}"
 
     # 2. Инициализация новой сущности Content
-    content = Content.new(message_id: message_id)
-    puts "Content initialized: #{content.inspect}"
+    #content = Content.new(message_id: message_id)
+    #puts "Content initialized: #{content.inspect}"
 
     # 3. Запуск класса Censor с нужными параметрами
-    Censor.new(settings).run
+    #Censor.new(settings).run
   end
 end
