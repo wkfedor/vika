@@ -107,7 +107,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_17_121213) do
     t.integer "views_count", default: 0, null: false, comment: "Количество просмотров"
     t.datetime "views_updated_at", precision: nil, comment: "Время последнего обновления количества просмотров"
     t.boolean "original", default: true, null: false, comment: "Оригинальное сообщение или сообщение для переделки"
-    t.index ["telegram_in_group_id", "message_number"], name: "index_messages_on_group_id_and_number", unique: true
+    t.index ["telegram_in_group_id", "message_number", "original"], name: "index_messages_on_group_id_number_original", unique: true
     t.index ["telegram_in_group_id"], name: "index_telegram_in_messages_on_telegram_in_group_id"
   end
 

@@ -7,7 +7,7 @@ gem 'grape', '~> 1.7.0'
 gem 'grape-swagger'
 gem 'grape-swagger-ui'
 gem 'grape-swagger-rails'
-gem 'seed_migration'
+gem "data_migrate"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 7.0.5"
 # Use postgresql as the database for Active Record

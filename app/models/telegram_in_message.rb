@@ -6,7 +6,26 @@ class TelegramInMessage < ApplicationRecord
   has_many :telegram_in_comments, dependent: :destroy
 
   validates :html_content, presence: true
-  validates :message_number, presence: true, uniqueness: { scope: :telegram_in_group_id }
+  validates :message_number, presence: true, uniqueness: { scope: [:telegram_in_group_id, :original] }
   validates :views_count, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
+  def duplicate(original: false)
+    new_message = self.dup
+    new_message.original = original
+    new_message.save!
+
+    self.telegram_in_media.each do |media|
+      new_message.telegram_in_media.create!(media.attributes.except('id', 'telegram_in_message_id'))
+    end
+
+    self.telegram_in_message_reactions.each do |reaction|
+      new_message.telegram_in_message_reactions.create!(reaction.attributes.except('id', 'telegram_in_message_id'))
+    end
+
+    self.telegram_in_comments.each do |comment|
+      new_message.telegram_in_comments.create!(comment.attributes.except('id', 'telegram_in_message_id'))
+    end
+
+    new_message
+  end
 end

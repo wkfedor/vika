@@ -1,33 +1,50 @@
-class AddTestSettingsData < SeedMigration::Migration
+class AddTestSettingsData < ActiveRecord::Migration[7.0]
   def up
     Setting.create(
       project_name: 'Леди в тренде',
       project_description: 'Постим сообщение из телеграмм групп с распродажами, опт от 1 еденицы, женская одежда',
       execution_sequence: [
         {
-          logic: '||',
+          class: 'Censor',
           data: [
-            { class: 'Censor', method: 'women_clothing', comment: 'Проверка на наличие в тексте признака женской одежды' },
-            { class: 'Censor', method: 'women_household_appliances', comment: 'Женская бытовая техника' },
-            { class: 'Censor', method: 'products_for_women', comment: 'Товары для женщин' }
+            {
+              logic: '||',
+              methods: [
+                { method: 'women_clothing', comment: 'Проверка на наличие в тексте признака женской одежды' },
+                { method: 'women_household_appliances', comment: 'Женская бытовая техника' },
+                { method: 'products_for_women', comment: 'Товары для женщин' }
+              ]
+            },
+            {
+              methods: [
+                { method: 'advertisement', comment: 'Проверка на наличие рекламы' }
+              ]
+            },
+            {
+              methods: [
+                { method: 'sale_from_one_unit', comment: 'Продажа от 1 еденицы' }
+              ]
+            },
+            {
+              methods: [
+                { method: 'without_text', comment: 'Проверка на отсутствие текста' }
+              ]
+            }
           ]
         },
         {
-          logic: nil,
+          class: 'Mutator',
           data: [
-            { class: 'Censor', method: 'advertisement', comment: 'Проверка на наличие рекламы' }
-          ]
-        },
-        {
-          logic: nil,
-          data: [
-            { class: 'Censor', method: 'sale_from_one_unit', comment: 'Продажа от 1 еденицы' }
-          ]
-        },
-        {
-          logic: nil,
-          data: [
-            { class: 'Censor', method: 'without_text', comment: 'Проверка на отсутствие текста' }
+            {
+              methods: [
+                { method: 'remove_contacts', comment: 'Удаление контактов' }
+              ]
+            },
+            {
+              methods: [
+                { method: 'remove_hashtags', comment: 'Удаление хештегов' }
+              ]
+            }
           ]
         }
       ]
