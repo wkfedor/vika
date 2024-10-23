@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_17_121213) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_23_121212) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.string "class_name", null: false, comment: "Название класса, в котором был вызван метод"
+    t.string "method_name", null: false, comment: "Название метода, который был вызван"
+    t.integer "content_id", null: false, comment: "ID элемента контента, с которым был вызван метод"
+    t.boolean "is_block", null: false, comment: "Признак, является ли метод частью логического блока"
+    t.boolean "result", null: false, comment: "Результат выполнения метода (true или false)"
+    t.string "error_message", comment: "Сообщение об ошибке, если метод упал с ошибкой"
+    t.integer "project_id", null: false, comment: "ID проекта, к которому относится лог"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["content_id"], name: "index_audit_logs_on_content_id"
+    t.index ["project_id"], name: "index_audit_logs_on_project_id"
+  end
 
   create_table "censors", comment: "Таблица для хранения правил цензуры", force: :cascade do |t|
     t.string "name", null: false, comment: "Название правила"
@@ -36,6 +50,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_17_121213) do
     t.index ["original_source_type", "original_source_id"], name: "idx_original_source"
     t.index ["processed_content_type", "processed_content_id"], name: "idx_processed_content"
     t.index ["setting_id"], name: "index_contents_on_setting_id"
+  end
+
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end
 
   create_table "settings", force: :cascade do |t|

@@ -4,25 +4,58 @@ class Censor
   SOURCE_MAPPING = {
     "TelegramInMessage" => { text: :html_content }
   }.freeze
+
   def initialize(settings:, content:)
     @settings = settings
     @content = content
   end
 
   def run
-    # Получаем текст из объекта content
-    @text_data = get_text_from_content
-    @settings['data'].each do |block|
-      if block['logic'] == '||'
-        result = block['methods'].map { |method| send(method['method']) }.reduce(:|)
-      else
-        result = block['methods'].map { |method| send(method['method']) }.first
+    begin
+      # Получаем текст из объекта content
+      @text_data = get_text_from_content
+      @settings['data'].each do |block|
+        if block['logic'] == '||'
+          result = block['methods'].map { |method| execute_method(method['method'], true) }.reduce(:|)
+        else
+          result = block['methods'].map { |method| execute_method(method['method'], false) }.first
+        end
+        puts "Result: #{result}"
       end
-      puts "Result: #{result}"
+    rescue StandardError => e
+      # Логируем ошибку в случае её возникновения
+      log_entry(__method__, false, false, e.message)
+      raise e # Повторно выбрасываем ошибку, чтобы она могла быть обработана вызывающим кодом
     end
   end
 
   private
+
+  # Метод для выполнения метода с перехватом исключений
+  def execute_method(method_name, is_block)
+    begin
+      result = send(method_name)
+      log_entry(method_name, is_block, result)
+      result
+    rescue StandardError => e
+      # Логируем ошибку в случае её возникновения
+      log_entry(method_name, is_block, false, e.message)
+      false # Возвращаем false в случае ошибки
+    end
+  end
+
+  # Метод для создания записи в таблице логов
+  def log_entry(method_name, is_block, result, error_message = nil)
+    AuditLog.create(
+      class_name: self.class.name,
+      method_name: method_name,
+      content_id: @content.id,
+      is_block: is_block,
+      result: result,
+      error_message: error_message,
+      project_id: @content.setting_id
+    )
+  end
 
   # Метод для получения текста из объекта content
   # Возвращает хэш с текстом в зависимости от типа источника
@@ -34,10 +67,12 @@ class Censor
     # Возвращаем текст из объекта processed_content
     { text: @content.processed_content.send(text_field) }
   end
+
   # Проверка на наличие в тексте признака женской одежды
   def women_clothing
     puts "Method: women_clothing, Text: #{@text_data[:text]}"
-    false
+    result = false
+    result
   end
 
   # Проверка на наличие в тексте признака женской бытовой техники
@@ -49,7 +84,7 @@ class Censor
   # Проверка на наличие в тексте признака товаров для женщин
   def products_for_women
     puts "Method: products_for_women, Text: #{@text_data[:text]}"
-    false
+    true
   end
 
   # Проверка на наличие рекламы в тексте
