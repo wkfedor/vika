@@ -37,12 +37,17 @@ class AddTestSettingsData < ActiveRecord::Migration[7.0]
           data: [
             {
               methods: [
-                { method: 'remove_contacts', comment: 'Удаление контактов' }
+                { method: 'add_original_group_stub', comment: 'Оригинальная группа' }
               ]
             },
             {
               methods: [
-                { method: 'remove_hashtags', comment: 'Удаление хештегов' }
+                { method: 'add_contact_info_stub', comment: 'Контакты для связи' }
+              ]
+            },
+            {
+              methods: [
+                { method: 'add_share_reminder', comment: 'не забудьте поделиться с друзьями' }
               ]
             }
           ]

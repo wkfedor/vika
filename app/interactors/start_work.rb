@@ -27,6 +27,16 @@ class StartWork < ActiveInteraction::Base
 
     # 6. Запуск классов Censor и Mutator с нужными параметрами
     censor_settings = settings.execution_sequence.find { |s| s['class'] == 'Censor' }
-    Censor.new(settings: censor_settings, content: content).run
+    censor_result = Censor.new(settings: censor_settings, content: content).run
+
+    # 7. Проверка результата работы Censor
+    if censor_result
+      # 8. Запуск мутатора, если Censor отработал успешно
+      mutator_settings = settings.execution_sequence.find { |s| s['class'] == 'Mutator' }
+      Mutator.new(settings: mutator_settings, content: content).run
+    else
+      puts "Censor failed, Mutator will not be executed."
+    end
+
   end
 end

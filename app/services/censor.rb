@@ -21,7 +21,9 @@ class Censor
           result = block['methods'].map { |method| execute_method(method['method'], false) }.first
         end
         puts "Result: #{result}"
+        return false unless result  # Возвращаем false, если какой-то метод вернул false
       end
+      return true  # Возвращаем true, если все методы отработали успешно
     rescue StandardError => e
       # Логируем ошибку в случае её возникновения
       log_entry(__method__, false, false, e.message)
