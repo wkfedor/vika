@@ -22,10 +22,7 @@ class Mutator
           execute_method(method['method'])
         end
       end
-      # Обновляем текст в объекте content
-      update_content_text
-      # Сохраняем обновленный объект content в базе данных
-      @content.save!
+
     rescue StandardError => e
       # Логируем ошибку в случае её возникновения
       log_entry(__method__, false, e.message)
@@ -40,6 +37,7 @@ class Mutator
     begin
       send(method_name)
       log_entry(method_name, true)
+      update_content_text
     rescue StandardError => e
       # Логируем ошибку в случае её возникновения
       log_entry(method_name, false, e.message)
@@ -72,9 +70,34 @@ class Mutator
 
   # Метод для обновления текста в объекте content
   def update_content_text
+    puts "update_content_text"
     source_type = @content.processed_content_type
     text_field = SOURCE_MAPPING[source_type][:text]
+
+    # Выводим название объекта в базе данных
+    puts "Updating object: #{@content.processed_content.class.name}"
+
+    # Выводим имя поля, которое обновляется
+    puts "Updating field: #{text_field}"
+
+    # Выводим текущее значение поля перед обновлением
+    current_value = @content.processed_content.send(text_field)
+    puts "Current value of #{text_field}: #{current_value.inspect}"
+
+    # Обновляем поле
     @content.processed_content.send("#{text_field}=", @text_data[:text])
+
+    # Выводим обновленное значение поля
+    updated_value = @content.processed_content.send(text_field)
+    puts "Updated value of #{text_field}: #{updated_value.inspect}"
+
+    # Сохраняем объект в базе данных
+    if @content.processed_content.save
+      puts "Save successful"
+    else
+      puts "Save failed"
+      puts @content.processed_content.errors.full_messages
+    end
   end
 
   # Метод для удаления ключевых слов из текста
@@ -86,16 +109,21 @@ class Mutator
 
   # Метод для добавления заглушки "Оригинальная группа"
   def add_original_group_stub
+    puts "add_original_group_stub"
     @text_data[:text] += "\nОригинальная группа <https://ya.ru>ссылка</a>"
+    # Сохраняем измененный текст в объекте @content
+
   end
 
   # Метод для добавления заглушки "Контакты для связи"
   def add_contact_info_stub
+    puts "add_contact_info_stub"
     @text_data[:text] += "\nКонтакты для связи <https://ya.ru>ссылка</a>"
   end
 
   # Метод для добавления текста "не забудьте поделиться с друзьями"
   def add_share_reminder
+    puts "add_share_reminder"
     @text_data[:text] += "\nне забудьте поделиться с друзьями"
   end
 end
