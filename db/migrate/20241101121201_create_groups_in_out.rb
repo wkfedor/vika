@@ -3,7 +3,7 @@ class CreateGroupsInOut < ActiveRecord::Migration[5.2]
     create_table :groups_in_out, comment: "Таблица для хранения групп (входящих и исходящих)" do |t|
       t.references :groupable, polymorphic: true, null: false, comment: "Ссылка на конкретную группу (полиморфная связь)"
       t.string :direction, null: false, comment: "Направление группы (incoming, outgoing)"
-      t.references :project, null: false, foreign_key: true, comment: "Ссылка на проект"
+      t.references :setting, null: false, foreign_key: true, comment: "Ссылка на проект"
       t.timestamps
     end
   end

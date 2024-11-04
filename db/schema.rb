@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_23_121212) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_01_121201) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,7 +52,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_23_121212) do
     t.index ["setting_id"], name: "index_contents_on_setting_id"
   end
 
-  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  create_table "groups_in_out", comment: "Таблица для хранения групп (входящих и исходящих)", force: :cascade do |t|
+    t.string "groupable_type", null: false
+    t.bigint "groupable_id", null: false, comment: "Ссылка на конкретную группу (полиморфная связь)"
+    t.string "direction", null: false, comment: "Направление группы (incoming, outgoing)"
+    t.bigint "setting_id", null: false, comment: "Ссылка на проект"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["groupable_type", "groupable_id"], name: "index_groups_in_out_on_groupable_type_and_groupable_id"
+    t.index ["setting_id"], name: "index_groups_in_out_on_setting_id"
   end
 
   create_table "settings", force: :cascade do |t|
@@ -124,11 +132,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_23_121212) do
     t.integer "views_count", default: 0, null: false, comment: "Количество просмотров"
     t.datetime "views_updated_at", precision: nil, comment: "Время последнего обновления количества просмотров"
     t.boolean "original", default: true, null: false, comment: "Оригинальное сообщение или сообщение для переделки"
-    t.index ["telegram_in_group_id", "message_number", "original"], name: "index_messages_on_group_id_number_original", unique: true
+    t.index ["telegram_in_group_id", "message_number"], name: "index_messages_on_group_id_and_number", unique: true
     t.index ["telegram_in_group_id"], name: "index_telegram_in_messages_on_telegram_in_group_id"
   end
 
   add_foreign_key "contents", "settings"
+  add_foreign_key "groups_in_out", "settings"
   add_foreign_key "telegram_in_comment_reactions", "telegram_in_comments"
   add_foreign_key "telegram_in_comments", "telegram_in_messages"
   add_foreign_key "telegram_in_media", "telegram_in_messages"
