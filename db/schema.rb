@@ -52,6 +52,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_01_121201) do
     t.index ["setting_id"], name: "index_contents_on_setting_id"
   end
 
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
   create_table "groups_in_out", comment: "Таблица для хранения групп (входящих и исходящих)", force: :cascade do |t|
     t.string "groupable_type", null: false
     t.bigint "groupable_id", null: false, comment: "Ссылка на конкретную группу (полиморфная связь)"
@@ -132,7 +135,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_01_121201) do
     t.integer "views_count", default: 0, null: false, comment: "Количество просмотров"
     t.datetime "views_updated_at", precision: nil, comment: "Время последнего обновления количества просмотров"
     t.boolean "original", default: true, null: false, comment: "Оригинальное сообщение или сообщение для переделки"
-    t.index ["telegram_in_group_id", "message_number"], name: "index_messages_on_group_id_and_number", unique: true
+    t.index ["telegram_in_group_id", "message_number", "original"], name: "index_messages_on_group_id_number_original", unique: true
     t.index ["telegram_in_group_id"], name: "index_telegram_in_messages_on_telegram_in_group_id"
   end
 
