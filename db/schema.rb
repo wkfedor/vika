@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_01_121201) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_30_010101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_01_121201) do
     t.jsonb "execution_sequence", default: [], null: false, comment: "Последовательность выполнения классов и методов"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.string "status", default: "work", null: false, comment: "Статус проекта, работает, выключен, на модерации"
   end
 
   create_table "sources", comment: "Таблица для хранения источников информации", force: :cascade do |t|
