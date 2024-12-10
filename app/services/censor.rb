@@ -109,9 +109,9 @@ class Censor
 
   def marketplace_self_buy_check_self
     # Первая часть сочетания (приводим к нижнему регистру)
-    first_part = ["Цена на WB", "Цена на Wildberries", "Цена на Вб", "Цена на ОЗОН"].map(&:downcase)
+    first_part = ["Цена на WB", "Цена на Wildberries", "Цена на Вб", "Цена ВБ", "Цена на ОЗОН"].map(&:downcase)
     # Вторая часть сочетания (приводим к нижнему регистру)
-    second_part = ["ЦЕНА ДЛЯ ВАС", "Ваша цена"].map(&:downcase)
+    second_part = ["ЦЕНА ДЛЯ ВАС", "Ваша цена", "Кэшбек от нас"].map(&:downcase)
 
     # Приводим текст для проверки к нижнему регистру
     text_to_check = @text_data[:text].downcase
