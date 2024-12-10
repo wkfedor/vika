@@ -106,4 +106,27 @@ class Censor
     puts "Method: without_text, Text: #{@text_data[:text]}"
     true
   end
+
+  def marketplace_self_buy_check_self
+    # Первая часть сочетания (приводим к нижнему регистру)
+    first_part = ["Цена на WB", "Цена на Wildberries", "Цена на Вб", "Цена на ОЗОН"].map(&:downcase)
+    # Вторая часть сочетания (приводим к нижнему регистру)
+    second_part = ["ЦЕНА ДЛЯ ВАС", "Ваша цена"].map(&:downcase)
+
+    # Приводим текст для проверки к нижнему регистру
+    text_to_check = @text_data[:text].downcase
+
+    # Проверяем каждую комбинацию
+    first_part.each do |first|
+      second_part.each do |second|
+        # Проверяем, содержит ли текст сочетание (без границ слова в любой части)
+        return true if text_to_check.match?(/#{first}.*#{second}/)
+      end
+    end
+
+    # Если ни одно сочетание не найдено
+    false
+  end
+
+
 end
